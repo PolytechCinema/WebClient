@@ -126,11 +126,11 @@ public class Controleur extends HttpServlet {
 				f = new Film();
 				f.setId(Integer.parseInt(request.getParameter("idFilm")));
 				f.setBudget(Integer.parseInt(request.getParameter("budget")));
-				//f.setCategorie(request.getParameter("categorie"));
+				f.setCategorie(getCategorie(Integer.parseInt(request.getParameter("categorie"))));
 				f.setDateSortie(Date.valueOf(request.getParameter("dateSortie")));
 				f.setDuree(Integer.parseInt(request.getParameter("duree")));
 				f.setMontantRecette(Integer.parseInt(request.getParameter("recette")));
-				//f.setRealisateur(request.getParameter("realisateur"));
+				f.setRealisateur(getReal(Integer.parseInt(request.getParameter("realisateur"))));
 				f.setTitre(request.getParameter("titre"));
 				call.putJson("/film/"+f.getId(), f);
 				request.setAttribute("Films", listFilm());
@@ -213,11 +213,21 @@ public class Controleur extends HttpServlet {
 	protected Film getFilm(int id){
 		Gson gson = new Gson();
 		Appel call = new Appel();
-		return gson.fromJson(call.appelJson("/film"+id), Film.class);
+		return gson.fromJson(call.appelJson("/film/"+id), Film.class);
 	}
 	protected Acteur getActeur(int id){
 		Gson gson = new Gson();
 		Appel call = new Appel();
-		return gson.fromJson(call.appelJson("/film"+id), Acteur.class);
+		return gson.fromJson(call.appelJson("/acteur/"+id), Acteur.class);
+	}
+	protected Realisateur getReal(int id){
+		Gson gson = new Gson();
+		Appel call = new Appel();
+		return gson.fromJson(call.appelJson("/real/"+id), Realisateur.class);
+	}
+	protected Categorie getCategorie(int id){
+		Gson gson = new Gson();
+		Appel call = new Appel();
+		return gson.fromJson(call.appelJson("/cat/"+id), Categorie.class);
 	}
 }
