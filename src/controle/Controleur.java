@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Executable;
 import java.sql.Date;
 import java.util.List;
 
@@ -38,15 +39,6 @@ public class Controleur extends HttpServlet {
 	private static final String SUPPRIMER_ACTEURS = "supprimerActeurs";
 	private static final String CHERCHER_ACTEURS = "chercherActeurs";
 	private static final String MODIFIER_ACTEURS = "modifierActeurs";
-
-
-	private static final String LISTER_ADHERENT = "listerAdherent";
-	private static final String AJOUTER_ADHERENT = "ajouterAdherent";
-	private static final String INSERER_ADHERENT = "insererAdherent";
-	private static final String SUPPRIMER_ADHERENT = "supprimerAdherent";
-	private static final String RECHERCHER_LISTE_OEUVRE = "chercherListeOeuvre";
-	private static final String RECHERCHER_OEUVRE = "rechercherOeuvre";
-	private static final String MODIFIER_OEUVRE = "modifierOeuvre";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -78,115 +70,103 @@ public class Controleur extends HttpServlet {
 
 	protected void processusTraiteRequete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String destinationPage = ERROR_PAGE;
+		String destinationPage;
 		Appel call = new Appel();
-		switch(request.getParameter(ACTION_TYPE)){
-			case LISTER_FILMS:
-				request.setAttribute("Films", listFilm());
-				destinationPage = "/Films/Liste.jsp";
-				break;
-			case AJOUTER_FILMS:
-				request.setAttribute("Categories", listCat());
-				request.setAttribute("Reals", listReal());
-				destinationPage = "/Films/Ajout.jsp";
-				break;
-			case INSERER_FILMS:
-				Film f = new Film();
-				f.setBudget(Integer.parseInt(request.getParameter("budget")));
-				//f.setCategorie(request.getParameter("categorie"));
-				f.setDateSortie(Date.valueOf(request.getParameter("dateSortie")));
-				f.setDuree(Integer.parseInt(request.getParameter("duree")));
-				f.setMontantRecette(Integer.parseInt(request.getParameter("recette")));
-				//f.setRealisateur(request.getParameter("realisateur"));
-				f.setTitre(request.getParameter("titre"));
-				call.postJson("/film/", f);
-				request.setAttribute("Films", listFilm());
-				destinationPage = "/Films/Liste.jsp";
-				break;
-			case SUPPRIMER_FILMS:
-				String id = request.getParameter("id");
-				if (id != null) {
-					call.deleteJson("/film/"+id);
-				}
-				request.setAttribute("Films", listFilm());
-				destinationPage = "/Films/Liste.jsp";
-				break;
-			case CHERCHER_FILMS:
-				id = request.getParameter("id");
-				if (id != null) {
-					request.setAttribute("Film", getFilm(Integer.parseInt(id)));
-					destinationPage = "/Film/Details.jsp";
-				}
-				else{
-					request.setAttribute(ERROR_KEY, "Error during searching of a movie");
-					destinationPage = ERROR_PAGE;
-				}
-				break;
-			case MODIFIER_FILMS:
-				f = new Film();
-				f.setId(Integer.parseInt(request.getParameter("idFilm")));
-				f.setBudget(Integer.parseInt(request.getParameter("budget")));
-				f.setCategorie(getCategorie(Integer.parseInt(request.getParameter("categorie"))));
-				f.setDateSortie(Date.valueOf(request.getParameter("dateSortie")));
-				f.setDuree(Integer.parseInt(request.getParameter("duree")));
-				f.setMontantRecette(Integer.parseInt(request.getParameter("recette")));
-				f.setRealisateur(getReal(Integer.parseInt(request.getParameter("realisateur"))));
-				f.setTitre(request.getParameter("titre"));
-				call.putJson("/film/"+f.getId(), f);
-				request.setAttribute("Films", listFilm());
-				destinationPage = "/Films/Liste.jsp";
-				break;
-			case LISTER_ACTEURS:
-				request.setAttribute("Acteurs", listActeur());
-				destinationPage = "/Acteurs/Liste.jsp";
-				break;
-			case AJOUTER_ACTEURS:
-				destinationPage = "/Acteurs/Ajout.jsp";
-				break;
-			case INSERER_ACTEURS:
-				Acteur a = new Acteur();
-				a.setNom(request.getParameter("nom"));
-				a.setPrenom(request.getParameter("prenom"));
-				a.setDateNaiss(Date.valueOf(request.getParameter("dateNaissance")));
+		Gson gson = new Gson();
+try {
+	switch (request.getParameter(ACTION_TYPE)) {
+		case LISTER_FILMS:
+			request.setAttribute("Films", listFilm());
+			destinationPage = "/Films/Liste.jsp";
+			break;
+		case AJOUTER_FILMS:
+			request.setAttribute("Categories", listCat());
+			request.setAttribute("Reals", listReal());
+			destinationPage = "/Films/Ajout.jsp";
+			break;
+		case INSERER_FILMS:
+			Film f = new Film();
+			f.setBudget(Integer.parseInt(request.getParameter("budget")));
+			//f.setCategorie(request.getParameter("categorie"));
+			f.setDateSortie(Date.valueOf(request.getParameter("dateSortie")));
+			f.setDuree(Integer.parseInt(request.getParameter("duree")));
+			f.setMontantRecette(Integer.parseInt(request.getParameter("recette")));
+			//f.setRealisateur(request.getParameter("realisateur"));
+			f.setTitre(request.getParameter("titre"));
+			call.postJson("/film/", f);
+			destinationPage = "/index.jsp";
+			break;
+		case SUPPRIMER_FILMS:
+			int id = gson.fromJson(request.getParameter("id"), Integer.class);
+			call.deleteJson("/film/" + id);
+			destinationPage = "/index.jsp";
+			break;
+		case CHERCHER_FILMS:
+			id = gson.fromJson(request.getParameter("id"), Integer.class);
+			request.setAttribute("Film", getFilm(id));
+			destinationPage = "/Films/Details.jsp";
+			break;
+		case MODIFIER_FILMS:
+			f = new Film();
+			f.setId(Integer.parseInt(request.getParameter("idFilm")));
+			f.setBudget(Integer.parseInt(request.getParameter("budget")));
+			f.setCategorie(getCategorie(Integer.parseInt(request.getParameter("categorie"))));
+			f.setDateSortie(Date.valueOf(request.getParameter("dateSortie")));
+			f.setDuree(Integer.parseInt(request.getParameter("duree")));
+			f.setMontantRecette(Integer.parseInt(request.getParameter("recette")));
+			f.setRealisateur(getReal(Integer.parseInt(request.getParameter("realisateur"))));
+			f.setTitre(request.getParameter("titre"));
+			call.putJson("/film/" + f.getId(), f);
+			destinationPage = "/index.jsp";
+			break;
+		case LISTER_ACTEURS:
+			request.setAttribute("Acteurs", listActeur());
+			destinationPage = "/Acteurs/Liste.jsp";
+			break;
+		case AJOUTER_ACTEURS:
+			destinationPage = "/Acteurs/Ajout.jsp";
+			break;
+		case INSERER_ACTEURS:
+			Acteur a = new Acteur();
+			a.setNom(request.getParameter("nom"));
+			a.setPrenom(request.getParameter("prenom"));
+			a.setDateNaiss(Date.valueOf(request.getParameter("dateNaissance")));
+			try {
 				a.setDateDeces(Date.valueOf(request.getParameter("dateDeces")));
-				call.postJson("/acteur/", a);
-				request.setAttribute("Acteurs", listFilm());
-				destinationPage = "/Acteurs/Liste.jsp";
-				break;
-			case SUPPRIMER_ACTEURS:
-				id = request.getParameter("id");
-				if (id != null) {
-					call.deleteJson("/acteur/"+id);
-				}
-				request.setAttribute("Acteurs", listFilm());
-				destinationPage = "/Acteurs/Liste.jsp";
-				break;
-			case CHERCHER_ACTEURS:
-				id = request.getParameter("id");
-				if (id != null) {
-					request.setAttribute("Acteurs", getActeur(Integer.parseInt(id)));
-					destinationPage = "/Acteurs/Details.jsp";
-				}
-				else{
-					request.setAttribute(ERROR_KEY, "Error during searching of an actor");
-					destinationPage = ERROR_PAGE;
-				}
-				break;
-			case MODIFIER_ACTEURS:
-				a = new Acteur();
-				a.setId(Integer.parseInt(request.getParameter("idActeur")));
-				a.setNom(request.getParameter("nom"));
-				a.setPrenom(request.getParameter("prenom"));
-				a.setDateNaiss(Date.valueOf(request.getParameter("dateNaissance")));
-				a.setDateDeces(Date.valueOf(request.getParameter("dateDeces")));
-				call.postJson("/acteur/", a);
-				request.setAttribute("Acteurs", listFilm());
-				destinationPage = "/Acteurs/Liste.jsp";
-				break;
-			default:
-				request.setAttribute(ERROR_KEY, "Not such action");
-				destinationPage = ERROR_PAGE;
-		}
+			} catch (Exception e) {
+			}
+			call.postJson("/acteur/", a);
+			destinationPage = "/index.jsp";
+			break;
+		case SUPPRIMER_ACTEURS:
+			id = gson.fromJson(request.getParameter("id"), Integer.class);
+			call.deleteJson("/acteur/" + id);
+			destinationPage = "/index.jsp";
+			break;
+		case CHERCHER_ACTEURS:
+			id = gson.fromJson(request.getParameter("id"), Integer.class);
+			request.setAttribute("Acteur", getActeur(id));
+			destinationPage = "/Acteurs/Details.jsp";
+			break;
+		case MODIFIER_ACTEURS:
+			a = new Acteur();
+			a.setId(Integer.parseInt(request.getParameter("idActeur")));
+			a.setNom(request.getParameter("nom"));
+			a.setPrenom(request.getParameter("prenom"));
+			a.setDateNaiss(Date.valueOf(request.getParameter("dateNaiss")));
+			a.setDateDeces(Date.valueOf(request.getParameter("dateDeces")));
+			call.postJson("/acteur/", a);
+			destinationPage = "/index.jsp";
+			break;
+		default:
+			request.setAttribute(ERROR_KEY, "Not such action");
+			destinationPage = ERROR_PAGE;
+	}
+}catch(Exception e){
+	request.setAttribute(ERROR_KEY, "An error occured");
+	destinationPage = ERROR_PAGE;}
+		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(destinationPage);
+		dispatcher.forward(request,response);
 	}
 
 	protected List<Film> listFilm(){

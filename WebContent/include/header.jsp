@@ -10,7 +10,7 @@
 		<meta name="revisit-after" content="15 days" />
 		<meta name="language" content="fr" />
 		<meta name="robots" content="all" />
-		<title>Gestion des Oeuvres</title>
+		<title>Cinema</title>
 		<link rel="stylesheet" href="css/mesStyles.css" />
 		<script type="text/javascript" src="js/jquery.js"></script>
 	</head>

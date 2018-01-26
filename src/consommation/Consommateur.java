@@ -11,7 +11,7 @@ public class Consommateur {
 	 * @param args
 	 */
 
-	protected static final String SERVICE_URI = "http://localhost:8080/mediatheque";
+	protected static final String SERVICE_URI = "http://192.168.1.125:8080/";
 	protected static Consommateur singleton = null;
 	protected  Client client;
 	public  WebTarget target; // permet de r�cup�rer l'URL du WS
