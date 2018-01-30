@@ -15,11 +15,19 @@
 							</tr>
 							<tr>
 								<td>Catégorie</td>
-								<td><input type="text" name="categorie" id="cat"></td>
+								<td><select name="categorie" id="categorie">
+									<c:forEach items="${Categories}" var="item">
+										<option value="${item.code}">${item.libelle}</option>
+									</c:forEach>
+								</select></td>
 							</tr>
 							<tr>
 								<td>Réalisateur</td>
-								<td><input type="text" name="realisateur" id="real"></td>
+								<td><select name="realisateur" id="realisateur">
+									<c:forEach items="${Reals}" var="item">
+										<option value="${item.id}">${item.prenom} ${item.nom}</option>
+									</c:forEach>
+								</select></td>
 							</tr>
 							<tr>
 								<td>Durée</td>

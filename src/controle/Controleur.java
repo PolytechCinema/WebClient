@@ -86,12 +86,16 @@ try {
 			break;
 		case INSERER_FILMS:
 			Film f = new Film();
-			f.setBudget(Integer.parseInt(request.getParameter("budget")));
-			//f.setCategorie(request.getParameter("categorie"));
-			f.setDateSortie(Date.valueOf(request.getParameter("dateSortie")));
-			f.setDuree(Integer.parseInt(request.getParameter("duree")));
-			f.setMontantRecette(Integer.parseInt(request.getParameter("recette")));
-			//f.setRealisateur(request.getParameter("realisateur"));
+			Categorie cat = new Categorie();
+			Realisateur real = new Realisateur();
+			cat.setCode(request.getParameter("categorie"));
+			real.setId(gson.fromJson(request.getParameter("realisateur"), Integer.class));
+			f.setBudget(gson.fromJson(request.getParameter("budget"), Integer.class));
+			f.setCategorie(cat);
+			f.setDateSortie(request.getParameter("dateSortie"));
+			f.setDuree(gson.fromJson(request.getParameter("duree"), Integer.class));
+			f.setMontantRecette(gson.fromJson(request.getParameter("recette"), Integer.class));
+			f.setRealisateur(real);
 			f.setTitre(request.getParameter("titre"));
 			call.postJson("/film/", f);
 			destinationPage = "/index.jsp";
@@ -104,17 +108,19 @@ try {
 		case CHERCHER_FILMS:
 			id = gson.fromJson(request.getParameter("id"), Integer.class);
 			request.setAttribute("Film", getFilm(id));
+			request.setAttribute("Categories", listCat());
+			request.setAttribute("Reals", listReal());
 			destinationPage = "/Films/Details.jsp";
 			break;
 		case MODIFIER_FILMS:
 			f = new Film();
-			f.setId(Integer.parseInt(request.getParameter("idFilm")));
-			f.setBudget(Integer.parseInt(request.getParameter("budget")));
-			f.setCategorie(getCategorie(Integer.parseInt(request.getParameter("categorie"))));
-			f.setDateSortie(Date.valueOf(request.getParameter("dateSortie")));
-			f.setDuree(Integer.parseInt(request.getParameter("duree")));
-			f.setMontantRecette(Integer.parseInt(request.getParameter("recette")));
-			f.setRealisateur(getReal(Integer.parseInt(request.getParameter("realisateur"))));
+			f.setId(gson.fromJson(request.getParameter("idFilm"), Integer.class));
+			f.setBudget(gson.fromJson(request.getParameter("budget"), Integer.class));
+			f.setCategorie(getCategorie(request.getParameter("categorie")));
+			f.setDateSortie(request.getParameter("dateSortie"));
+			f.setDuree(gson.fromJson(request.getParameter("duree"), Integer.class));
+			f.setMontantRecette(gson.fromJson(request.getParameter("recette"), Integer.class));
+			f.setRealisateur(getReal(gson.fromJson(request.getParameter("realisateur"), Integer.class)));
 			f.setTitre(request.getParameter("titre"));
 			call.putJson("/film/" + f.getId(), f);
 			destinationPage = "/index.jsp";
@@ -130,9 +136,9 @@ try {
 			Acteur a = new Acteur();
 			a.setNom(request.getParameter("nom"));
 			a.setPrenom(request.getParameter("prenom"));
-			a.setDateNaiss(Date.valueOf(request.getParameter("dateNaissance")));
+			a.setDateNaiss(request.getParameter("dateNaissance"));
 			try {
-				a.setDateDeces(Date.valueOf(request.getParameter("dateDeces")));
+				a.setDateDeces(request.getParameter("dateDeces"));
 			} catch (Exception e) {
 			}
 			call.postJson("/acteur/", a);
@@ -150,11 +156,11 @@ try {
 			break;
 		case MODIFIER_ACTEURS:
 			a = new Acteur();
-			a.setId(Integer.parseInt(request.getParameter("idActeur")));
+			a.setId(gson.fromJson(request.getParameter("idActeur"), Integer.class));
 			a.setNom(request.getParameter("nom"));
 			a.setPrenom(request.getParameter("prenom"));
-			a.setDateNaiss(Date.valueOf(request.getParameter("dateNaiss")));
-			a.setDateDeces(Date.valueOf(request.getParameter("dateDeces")));
+			a.setDateNaiss(request.getParameter("dateNaiss"));
+			a.setDateDeces(request.getParameter("dateDeces"));
 			call.postJson("/acteur/", a);
 			destinationPage = "/index.jsp";
 			break;
@@ -205,7 +211,7 @@ try {
 		Appel call = new Appel();
 		return gson.fromJson(call.appelJson("/real/"+id), Realisateur.class);
 	}
-	protected Categorie getCategorie(int id){
+	protected Categorie getCategorie(String id){
 		Gson gson = new Gson();
 		Appel call = new Appel();
 		return gson.fromJson(call.appelJson("/cat/"+id), Categorie.class);

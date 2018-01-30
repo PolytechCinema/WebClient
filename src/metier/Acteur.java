@@ -10,8 +10,8 @@ public class Acteur {
     private long id;
     private String nom;
     private String prenom;
-    private Date dateNaiss;
-    private Date dateDeces;
+    private String dateNaiss;
+    private String dateDeces;
 
     public long getId() {
         return id;
@@ -37,19 +37,19 @@ public class Acteur {
         this.prenom = prenom;
     }
 
-    public Date getDateNaiss() {
+    public String getDateNaiss() {
         return dateNaiss;
     }
 
-    public void setDateNaiss(Date dateNaiss) {
+    public void setDateNaiss(String dateNaiss) {
         this.dateNaiss = dateNaiss;
     }
 
-    public Date getDateDeces() {
+    public String getDateDeces() {
         return dateDeces;
     }
 
-    public void setDateDeces(Date dateDeces) {
+    public void setDateDeces(String dateDeces) {
         this.dateDeces = dateDeces;
     }
 }

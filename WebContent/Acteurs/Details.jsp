@@ -22,11 +22,11 @@
 						</tr>
 						<tr>
 							<td>Date de naissance</td>
-							<td><input type="date" name="dateNaiss" value="${Acteur.dateNaiss}"/></td>
+							<td><input type="text" name="dateNaiss" value="${Acteur.dateNaiss}"/></td>
 						</tr>
 						<tr>
 							<td>Date de décès</td>
-							<td><input type="date" name="dateDeces" value ="${Acteur.dateDeces}"/></td>
+							<td><input type="text" name="dateDeces" value ="${Acteur.dateDeces}"/></td>
 						</tr>
 					</table>
 					<input type="submit" value="Modifier"/>

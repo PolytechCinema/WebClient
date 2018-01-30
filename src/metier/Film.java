@@ -10,7 +10,7 @@ public class Film {
     private long id;
     private String titre;
     private int duree;
-    private Date dateSortie;
+    private String dateSortie;
     private int budget;
     private int montantRecette;
     private Realisateur realisateur;
@@ -40,11 +40,11 @@ public class Film {
         this.duree = duree;
     }
 
-    public Date getDateSortie() {
+    public String getDateSortie() {
         return dateSortie;
     }
 
-    public void setDateSortie(Date dateSortie) {
+    public void setDateSortie(String dateSortie) {
         this.dateSortie = dateSortie;
     }
 

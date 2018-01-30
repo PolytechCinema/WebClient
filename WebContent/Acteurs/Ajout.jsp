@@ -19,11 +19,11 @@
 							</tr>
 							<tr>
 								<td>Date de Naissance</td>
-								<td><input type="date" name="dateNaiss" id="dateNaiss"></td>
+								<td><input type="text" name="dateNaiss" id="dateNaiss"></td>
 							</tr>
 							<tr>
 								<td>Date de Décès</td>
-								<td><input type="date" name="dateDeces" id="dateDeces"></td>
+								<td><input type="text" name="dateDeces" id="dateDeces"></td>
 							</tr>
 						</table>
 						<input type="submit" name="bt" value="Ajouter">

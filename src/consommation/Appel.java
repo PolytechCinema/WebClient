@@ -11,18 +11,18 @@ public class Appel {
 	public  String  appelJson(String action)
 	{
 		String uneChaine;
-		
+
 		WebTarget target = Consommateur.get().target;
 		target = target.path(action);
 		System.out.println(" uri :"  + target.getUri());
 		uneChaine= target.request().accept(MediaType.APPLICATION_JSON).get(String.class);
 		return uneChaine;
 	}
-	
+
 	public String putJson(String action, Object unObj)
 	{
 		Response uneChaine;
-		
+
 		WebTarget target = Consommateur.get().target;
 		target = target.path(action);
 		System.out.println(" uri :"  + target.getUri());
@@ -38,11 +38,11 @@ public class Appel {
 			 return "Echec mise Ã  jour";
 		 }
 	}
-	
+
 	public String postJson(String action, Object unObj)
 	{
 		Response uneChaine;
-		
+
 		WebTarget target = Consommateur.get().target;
 		target = target.path(action);
 		System.out.println(" uri :"  + target.getUri());
@@ -50,7 +50,7 @@ public class Appel {
 		String json=gson.toJson(unObj);
 		Response response = target.request(MediaType.APPLICATION_JSON)
 	               .post(Entity.entity(json, MediaType.APPLICATION_JSON),Response.class);
-	              
+
 		 if(response.getStatus() >= 200 && response.getStatus() <= 299) {
 			 return "Mise Ã  jour effectuée";
 		 }
@@ -61,13 +61,13 @@ public class Appel {
 	public String deleteJson(String action)
 	{
 		Response uneChaine;
-		
+
 		WebTarget target = Consommateur.get().target;
 		target = target.path(action);
 		System.out.println(" uri :"  + target.getUri());
 		Response response = target.request(MediaType.APPLICATION_JSON)
 	               .delete();
-	             
+
 		 if(response.getStatus() >= 200 && response.getStatus() <= 299) {
 			 return "Mise à  jour effectuÃ©e";
 		 }
